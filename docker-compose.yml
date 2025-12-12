@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  cat-rater:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      # Volume para as fotos - coloque suas fotos aqui
+      - ./public/photos:/app/public/photos
+      # Volume para os votos (persistência)
+      - ./data:/app/data
+    restart: unless-stopped
+    container_name: cat-rater-app
+
+volumes:
+  photos:
+  data:

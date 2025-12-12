@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat Rater - Ranking de Fotos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🐱 Cat Rater</h1>
+      <p>Vote nas suas fotos favoritas!</p>
+      <p class="info-banner">📁 Coloque suas fotos na pasta <code>public/photos/</code> e elas aparecerão aqui automaticamente!</p>
+    </header>
+
+    <!-- Grid de fotos -->
+    <section class="photos-section">
+      <h2>Ranking</h2>
+      <div id="photosGrid" class="photos-grid">
+        <div class="loading">Carregando fotos...</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
