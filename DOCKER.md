@@ -13,7 +13,7 @@ cp /caminho/das/suas/fotos/* public/photos/
 docker-compose up -d
 ```
 
-O app estará rodando em `http://localhost:3000`
+O app estará rodando em `http://localhost:3007`
 
 ### 3. Ver logs
 ```bash
@@ -38,7 +38,8 @@ docker build -t cat-rater .
 ```bash
 docker run -d \
   --name cat-rater \
-  -p 3000:3000 \
+  -p 3007:3007 \
+  -e PORT=3007 \
   -v $(pwd)/public/photos:/app/public/photos \
   -v $(pwd)/data:/app/data \
   cat-rater
@@ -78,7 +79,8 @@ scp -r public/photos/* usuario@servidor:~/cat-rater/photos/
 # Rodar container
 docker run -d \
   --name cat-rater \
-  -p 3000:3000 \
+  -p 3007:3007 \
+  -e PORT=3007 \
   -v ~/cat-rater/photos:/app/public/photos \
   -v ~/cat-rater/data:/app/data \
   --restart unless-stopped \
@@ -108,7 +110,8 @@ mkdir -p ~/cat-rater/photos ~/cat-rater/data
 # Rodar
 docker run -d \
   --name cat-rater \
-  -p 3000:3000 \
+  -p 3007:3007 \
+  -e PORT=3007 \
   -v ~/cat-rater/photos:/app/public/photos \
   -v ~/cat-rater/data:/app/data \
   --restart unless-stopped \
@@ -145,7 +148,7 @@ curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
 ngrok config add-authtoken SEU_TOKEN
 
 # Expor
-ngrok http 3000
+ngrok http 3007
 ```
 
 ---
@@ -201,7 +204,7 @@ docker-compose up -d
 docker-compose logs -f
 
 # 5. Acessar
-curl http://localhost:3000
+curl http://localhost:3007
 ```
 
 Pronto! 🎉

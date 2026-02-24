@@ -58,6 +58,16 @@ O ngrok vai gerar uma URL pública (ex: `https://abc123.ngrok.io`) que você pod
 3. Clicam em "Votar" para dar um voto
 4. O ranking atualiza automaticamente a cada 3 segundos
 
+### Envio de fotos pelos usuários:
+1. Na página inicial, preenchem o nome da foto e selecionam a imagem
+2. A foto entra em uma fila de aprovação
+3. A foto só aparece no ranking depois da aprovação do admin
+
+### Aprovação admin:
+1. Acesse `/bemlocodasideia`
+2. Entre com a senha `***REMOVED***` (ou `ADMIN_PASSWORD` no ambiente)
+3. Aprove ou rejeite cada submissão pendente
+
 ## 💾 Armazenamento
 
 - **Fotos**: Pasta `public/photos/` no seu PC
@@ -69,12 +79,16 @@ O ngrok vai gerar uma URL pública (ex: `https://abc123.ngrok.io`) que você pod
 - ✅ Adicione fotos apenas colando na pasta `public/photos/`
 - ✅ Remova fotos deletando da pasta
 - ✅ Votar em fotos
+- ✅ Limite de 1 voto por IP
+- ✅ Usuários podem enviar fotos para aprovação
 - ✅ Ranking em tempo real
 - ✅ Atualização automática a cada 3 segundos
 - ✅ Badges para top 3 (🥇🥈🥉)
 - ✅ Votos salvos em JSON local
+- ✅ Página de aprovação admin protegida por senha
 - ✅ Interface responsiva e bonita
 - ✅ Sincronização automática com a pasta
+- ✅ Bloqueio de requisições `POST` com origem externa
 
 ## 🛠️ Tecnologias
 

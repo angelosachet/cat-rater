@@ -11,8 +11,18 @@
     <header>
       <h1>🐱 Cat Rater</h1>
       <p>Vote nas suas fotos favoritas!</p>
-      <p class="info-banner">📁 Coloque suas fotos na pasta <code>public/photos/</code> e elas aparecerão aqui automaticamente!</p>
     </header>
+
+    <section class="submit-section">
+      <h2>Enviar sua foto</h2>
+      <p class="submit-help">Envie sua foto e o nome dela. Após aprovação do admin, ela aparecerá no ranking.</p>
+      <form id="submissionForm" class="submission-form">
+        <input id="submissionName" name="name" type="text" minlength="2" maxlength="60" placeholder="Nome da foto" required>
+        <input id="submissionPhoto" name="photo" type="file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp" required>
+        <button type="submit" class="btn btn-primary">Enviar para aprovação</button>
+      </form>
+      <div id="submissionMessage" class="submission-message" aria-live="polite"></div>
+    </section>
 
     <!-- Grid de fotos -->
     <section class="photos-section">

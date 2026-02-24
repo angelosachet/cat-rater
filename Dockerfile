@@ -14,10 +14,11 @@ COPY public ./public
 RUN mkdir -p /app/public/photos /app/data
 
 # Expor porta
-EXPOSE 3000
+EXPOSE 3007
 
 # Variável de ambiente para o arquivo de dados
 ENV DATA_FILE=/app/data/votes.json
+ENV PORT=3007
 
 # Comando para iniciar
 CMD ["node", "server.js"]

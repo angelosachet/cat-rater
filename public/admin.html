@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat Rater - Aprovação</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🔐 Aprovação de Fotos</h1>
+      <p>Somente admin pode aprovar ou rejeitar submissões</p>
+      <a class="admin-link" href="/">Voltar para o ranking</a>
+    </header>
+
+    <section id="adminLogin" class="admin-login">
+      <h2>Entrar</h2>
+      <p>Digite a senha de admin para acessar as submissões pendentes.</p>
+      <form id="adminLoginForm" class="admin-form">
+        <input id="adminPassword" type="password" placeholder="Senha de admin" required>
+        <button type="submit" class="btn btn-primary">Acessar</button>
+      </form>
+      <div id="adminLoginMessage" class="submission-message" aria-live="polite"></div>
+    </section>
+
+    <section id="adminDashboard" class="admin-dashboard hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <h2>Submissões pendentes</h2>
+        <button id="adminLogout" class="btn btn-secondary">Sair</button>
+      </div>
+      <div id="adminStatus" class="submission-message" aria-live="polite"></div>
+      <div id="pendingGrid" class="pending-grid">
+        <div class="loading">Carregando submissões...</div>
+      </div>
+    </section>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
