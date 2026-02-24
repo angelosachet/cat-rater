@@ -12,6 +12,7 @@ const PENDING_UPLOADS_DIR = process.env.PENDING_UPLOADS_DIR || path.join(__dirna
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '***REMOVED***';
 const ADMIN_SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12h
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp']);
+const MAX_UPLOAD_BYTES = 1 * 1024 * 1024;
 const adminSessions = new Map();
 
 // Middleware
@@ -103,6 +104,42 @@ function createSafeFilename(name) {
   return `${base}-${Date.now()}`;
 }
 
+function hasSignature(buffer, signature, offset = 0) {
+  if (!Buffer.isBuffer(buffer)) return false;
+  if (buffer.length < offset + signature.length) return false;
+
+  for (let i = 0; i < signature.length; i += 1) {
+    if (buffer[offset + i] !== signature[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isValidImageFile(filePath, extension) {
+  const ext = String(extension || '').toLowerCase();
+  const header = fs.readFileSync(filePath, { encoding: null, flag: 'r' }).subarray(0, 16);
+
+  if (ext === '.jpg' || ext === '.jpeg') {
+    return hasSignature(header, [0xff, 0xd8, 0xff]);
+  }
+
+  if (ext === '.png') {
+    return hasSignature(header, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+  }
+
+  if (ext === '.gif') {
+    return hasSignature(header, [0x47, 0x49, 0x46, 0x38]);
+  }
+
+  if (ext === '.webp') {
+    return hasSignature(header, [0x52, 0x49, 0x46, 0x46], 0) && hasSignature(header, [0x57, 0x45, 0x42, 0x50], 8);
+  }
+
+  return false;
+}
+
 function getBearerToken(req) {
   const authHeader = req.get('authorization') || '';
   const parts = authHeader.split(' ');
@@ -145,7 +182,7 @@ const upload = multer({
     }
   }),
   limits: {
-    fileSize: 8 * 1024 * 1024
+    fileSize: MAX_UPLOAD_BYTES
   },
   fileFilter: (_req, file, cb) => {
     const ext = path.extname(file.originalname || '').toLowerCase();
@@ -225,6 +262,9 @@ app.post('/api/submissions', (req, res) => {
 
   upload.single('photo')(req, res, (uploadError) => {
     if (uploadError) {
+      if (uploadError.code === 'LIMIT_FILE_SIZE') {
+        return res.status(400).json({ error: 'A imagem deve ter no máximo 1MB' });
+      }
       return res.status(400).json({ error: uploadError.message || 'Falha no upload da foto' });
     }
 
@@ -240,6 +280,16 @@ app.post('/api/submissions', (req, res) => {
 
     if (!req.file) {
       return res.status(400).json({ error: 'Envie uma imagem para submissão' });
+    }
+
+    const uploadedExtension = path.extname(req.file.filename || '').toLowerCase();
+    const isRealImage = isValidImageFile(req.file.path, uploadedExtension);
+
+    if (!isRealImage) {
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      return res.status(400).json({ error: 'Arquivo inválido. Envie apenas imagens reais (JPG, PNG, GIF ou WEBP)' });
     }
 
     data.pendingSubmissions.push({
