@@ -140,6 +140,20 @@ function isValidImageFile(filePath, extension) {
   return false;
 }
 
+function moveFileSafely(fromPath, toPath) {
+  try {
+    fs.renameSync(fromPath, toPath);
+    return;
+  } catch (error) {
+    if (error.code !== 'EXDEV') {
+      throw error;
+    }
+  }
+
+  fs.copyFileSync(fromPath, toPath);
+  fs.unlinkSync(fromPath);
+}
+
 function getBearerToken(req) {
   const authHeader = req.get('authorization') || '';
   const parts = authHeader.split(' ');
@@ -409,7 +423,11 @@ app.post('/api/admin/submissions/:id/approve', requireAdmin, (req, res) => {
   const approvedFilename = `${safeBaseName}${ext}`;
   const approvedFilePath = path.join(PHOTOS_DIR, approvedFilename);
 
-  fs.renameSync(pendingFilePath, approvedFilePath);
+  try {
+    moveFileSafely(pendingFilePath, approvedFilePath);
+  } catch (error) {
+    return res.status(500).json({ error: 'Falha ao mover imagem para fotos aprovadas' });
+  }
 
   const photo = {
     id: makeId(),
