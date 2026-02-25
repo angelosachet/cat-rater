@@ -11,6 +11,7 @@ const PHOTOS_DIR = process.env.PHOTOS_DIR || path.join(__dirname, 'public', 'pho
 const PENDING_UPLOADS_DIR = process.env.PENDING_UPLOADS_DIR || path.join(__dirname, 'data', 'pending-uploads');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '***REMOVED***';
 const ADMIN_SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12h
+const VOTE_COOLDOWN_MS = 1000 * 15; // 15s por IP
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp']);
 const MAX_UPLOAD_BYTES = 1 * 1024 * 1024;
 const adminSessions = new Map();
@@ -336,18 +337,19 @@ app.post('/api/vote/:id', (req, res) => {
   }
 
   const ip = getClientIp(req);
-  data.ipVotes = data.ipVotes || {};
+  data.lastVotes = data.lastVotes || {};
 
-  if (data.ipVotes[ip]) {
-    return res.status(429).json({ error: 'Este IP já votou e não pode votar novamente' });
+  const now = Date.now();
+  const lastVoteAt = Number(data.lastVotes[ip] || 0);
+
+  if (now - lastVoteAt < VOTE_COOLDOWN_MS) {
+    const waitSeconds = Math.ceil((VOTE_COOLDOWN_MS - (now - lastVoteAt)) / 1000);
+    return res.status(429).json({ error: `Aguarde ${waitSeconds}s para votar novamente` });
   }
 
   // Registrar voto
   photo.votes += 1;
-  data.ipVotes[ip] = {
-    photoId: id,
-    votedAt: new Date().toISOString()
-  };
+  data.lastVotes[ip] = now;
   saveData(data);
 
   res.json(photo);
