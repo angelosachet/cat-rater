@@ -68,10 +68,17 @@ header p {
 .submission-form input {
   flex: 1;
   min-width: 220px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
   padding: 12px;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   font-size: 1rem;
+}
+
+.submission-form input[type="file"] {
+  overflow: hidden;
 }
 
 .submission-form input:focus {
@@ -469,6 +476,17 @@ header p {
 
 /* Responsivo */
 @media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+
+  .submit-section,
+  .photos-section,
+  .admin-login,
+  .admin-dashboard {
+    padding: 16px;
+  }
+
   header h1 {
     font-size: 2rem;
   }
@@ -484,6 +502,17 @@ header p {
   .submission-form,
   .admin-form {
     flex-direction: column;
+  }
+
+  .submission-form input,
+  .submission-form button,
+  .admin-form input,
+  .admin-form button,
+  #addPhotoForm input,
+  #addPhotoForm button {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
   
   #addPhotoForm input {
