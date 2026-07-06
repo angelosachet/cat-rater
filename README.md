@@ -64,9 +64,12 @@ O ngrok vai gerar uma URL pública (ex: `https://abc123.ngrok.io`) que você pod
 3. A foto só aparece no ranking depois da aprovação do admin
 
 ### Aprovação admin:
-1. Acesse `/bemlocodasideia`
-2. Entre com a senha `***REMOVED***` (ou `ADMIN_PASSWORD` no ambiente)
-3. Aprove ou rejeite cada submissão pendente
+1. Configure a senha: copie `.env.example` para `.env` e defina `ADMIN_PASSWORD`
+2. Acesse a rota de admin (definida no servidor)
+3. Entre com a senha configurada em `ADMIN_PASSWORD`
+4. Aprove ou rejeite cada submissão pendente
+
+> ⚠️ A senha do admin é lida da variável de ambiente `ADMIN_PASSWORD` (arquivo `.env`, não versionado). Nunca faça commit dela.
 
 ## 💾 Armazenamento
 

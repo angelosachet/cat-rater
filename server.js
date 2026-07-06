@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -9,7 +11,11 @@ const PORT = Number(process.env.PORT) || 3000;
 const DATA_FILE = process.env.DATA_FILE || path.join(__dirname, 'votes.json');
 const PHOTOS_DIR = process.env.PHOTOS_DIR || path.join(__dirname, 'public', 'photos');
 const PENDING_UPLOADS_DIR = process.env.PENDING_UPLOADS_DIR || path.join(__dirname, 'data', 'pending-uploads');
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '***REMOVED***';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+if (!ADMIN_PASSWORD) {
+  console.error('❌ ADMIN_PASSWORD não definida. Defina no arquivo .env (veja .env.example).');
+  process.exit(1);
+}
 const ADMIN_SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12h
 const VOTE_COOLDOWN_MS = 1000 * 15; // 15s por IP
 const IMAGE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.gif', '.webp']);
